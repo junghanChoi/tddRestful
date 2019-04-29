@@ -1,0 +1,88 @@
+Tech Stack
+	NodeJS, ExpressJS, MongoDB
+Service Name
+	Customer Service
+
+Functionalities
+
+1. Add customer API
+ send a new customer detail in req
+ service will create the new customer.
+ api will responde with newly created customer detail.
+
+ HTTP Method		POST
+ API Endpoint		/customers
+ Req Path Param		None
+ Req Query param	None
+ Req Body		Customer details
+ Res Body		Created Details
+ Res status		200
+
+2. Get Customer List API
+
+get a list of customers.
+This api endpoint will have searching, filtering, and paging features.
+
+HTTP Method		GET
+API Endpoint		/customers
+Req Path		None
+Req Query		None
+Req Body		None
+Res Body		Fetched Customers List
+Res Status		200
+
+3. Get Customer API
+once the customer has been created or modified, we can get the detail for a
+particular customer.
+# What if not exists?
+
+Get Customer
+HTTP METHOD		GET
+API Endpoint		/customers/:customerId
+Req Path Param		customerId
+Req Query Param		None
+Req Body		None
+Res Body		Fetched Customer details
+Res Staus		200
+
+4. Modify Customer API
+Send the modified customer detail in the req to be persisted in the storage.
+Respond with modified detail
+
+HTTP METHOD		PUT
+API Endpoint		/customers/:customerId
+Request Path Param	customerId
+Request Query Param	None
+Request Body		Customer Details
+Res Body		Modified Customer Details
+Response Status		200
+
+5. Remove Customer API
+Delete a customer from our system using this api endpoint.
+Once it removed from the system, respond with the customer detail.
+
+HTTP METHOD		DELETE
+API Endpoint		/customers/:customerId
+Req Path Param		customerId
+Req Query Param		None
+Req Body		None
+Res Body		Removed Customer Details
+Response Status		200
+
+
+Customer Details
+
+The below table shows the attributes for a customer.
+Fied type required.
+
+|Field Name | Field Type | Required? | Constaints|
+| First Name| Text	| Required	| Minimum 2 characters|
+| Last Name | Text	| Required	| Minimum 1 Characters|
+| Email	| Text | Required | Valid Email |
+| Phone Number | Number | Required | Valid Phone Number |
+| Address | Text | Not Required| |
+| City | Text | Not Required | |
+| State | Text | Not Required | |
+| Zip Code | Number | Not Required | |
+| Country | Text | Not Required| |
+
