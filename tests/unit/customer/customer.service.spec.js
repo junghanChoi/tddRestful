@@ -29,6 +29,7 @@ describe('CustomerService',function(){
         return mongoose.connection.close();
     })
 
+    //We are mocking create function
     describe('createCustomer', function(){
         var newCustomer, expectedError, expectedCreatedCustomer;
         it('should successfully create new customer', function(){
