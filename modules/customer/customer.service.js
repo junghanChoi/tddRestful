@@ -1,5 +1,13 @@
 (function(){
     'use strict';
+    
+    module.exports = {
+        createCustomer: createCustomer
+    };
 
-    module.exports = {};
+    var CustomerModel = require('./customer.module')().CustomerModel;
+    
+    function createCustomer(customer){
+        return CustomerModel.create(customer);
+    };
 })();
