@@ -9,12 +9,17 @@
 
     function addCustomer(req, res, next){
         CustomerService.createCustomer(req.body)
-        .then(success);
+        .then(success)
+        .catch(failure);
+
         function success(data){
             req.response = data;
             next();
         }
     
+        function failure(error){
+            next(error);
+        }
     
     };
 })();

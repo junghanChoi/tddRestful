@@ -19,6 +19,10 @@ app.set('view engine', 'jade');
 */
 
 var MongoDBUtil = require('./modules/mongodb/mongodb.module').MongoDBUtil;
+//get controller
+var CustomerController = require('./modules/customer/customer.module')().CustomerController;
+
+
 
 app.use(logger('dev'));
 app.use(express.json());//body-parser. parse only json content-type
@@ -31,7 +35,7 @@ app.use('/users', usersRouter);
 */
 //////above, app level dependency level.
 MongoDBUtil.init();
-
+app.use('/customers', CustomerController);
 
 // remove index page. and response with package.json file
 app.get('/', function(req, res){

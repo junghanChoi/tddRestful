@@ -52,5 +52,21 @@ describe('CustomerMiddleware', function(){
                 sinon.assert.callCount(next, 1);
             })
         })
+        
+        // failure test case
+        it('should throw error while creating the new customer', function(){
+            expectedError = ErrorFixture.unknownError;
+
+            createCustomerPromise = Promise.reject(expectedError);
+            createCustomer.withArgs(req.body).returns(createCustomerPromise);
+
+            CustomerMiddleware.addCustomer(req,res,next);
+
+            sinon.assert.callCount(createCustomer, 1);
+            return createCustomerPromise.catch(function(error){
+                expect(error).to.be.a('object');
+                expect(error).to.deep.equal(expectedError);
+            });
+        });
     })
 })

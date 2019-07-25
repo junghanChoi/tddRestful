@@ -1,6 +1,6 @@
 {
     "mongodb":{
-        "server": "localhost:32769",
+        "server": "localhost:32768",
         "database": "customer_db_dev",
         "user": null,
         "password": null
