@@ -88,7 +88,7 @@ describe('CustomerService',function(){
             CustomerModelMock.expects('find')
             .withArgs({})
             .chain('exec')
-            .rejects(expectedError);
+            .rejects(expectedError); // Mock이 error를 발생시킴.
 
             return CustomerService.fetchCustomers()
             .catch(function(error){
