@@ -3,6 +3,7 @@
 var chai = require('chai');
 var expect = chai.expect;
 var sinon = require('sinon');
+require('sinon-mongoose')
 
 var mongoose = require('mongoose');
 // CustomerModule is mocked.
@@ -60,5 +61,40 @@ describe('CustomerService',function(){
                 expect(error).to.deep.equal(expectedError);
             });
         })
+    });
+
+    // fetchCustomers
+    describe('fetchCustoers', function(){
+        var expectedCustomers, expectedError;
+        it('should successfully fetch all customers', function(){
+            // setting up expected response
+            expectedCustomers = CustomerFixture.customers;
+            //mocking behavior of the dependencies 
+            CustomerModelMock.expects('find') //mongoose model's method. find, exec.
+            .withArgs({})
+            .chain('exec')// return a promise. 
+            .resolves(expectedCustomers);
+
+            // invoking the method
+            return CustomerService.fetchCustomers()
+            .then(function(data){
+                CustomerModelMock.verify();
+                expect(data).to.deep.equal(expectedCustomers);
+            });
+        });
+        it('should throw error while fetching all customers', function(){
+            expectedError = ErrorFixture.unknownError;
+
+            CustomerModelMock.expects('find')
+            .withArgs({})
+            .chain('exec')
+            .rejects(expectedError);
+
+            return CustomerService.fetchCustomers()
+            .catch(function(error){
+                CustomerModelMock.verify();
+                expect(error).to.deep.equal(expectedError);
+            });
+        });
     });
 });

@@ -68,5 +68,48 @@ describe('CustomerMiddleware', function(){
                 expect(error).to.deep.equal(expectedError);
             });
         });
-    })
+    });
+
+    describe('getCustomers', function(){
+        var fetchCustomers, fetchCustomersPromise, expectedCustomers, expectedError;
+
+        beforeEach(function(){
+            fetchCustomers = sinon.stub(CustomerService, 'fetchCustomers');
+            req.body = {};
+        });
+        afterEach(function(){
+            fetchCustomers.restore();
+        });
+
+        it('should successfully get all customers', function(){
+            expectedCustomers = CustomerFixture.customers;// 이전거 활용
+
+            fetchCustomersPromise = Promise.resolve(expectedCustomers); //해당 객체를 반환하는 프로미스 생성
+            fetchCustomers.returns(fetchCustomersPromise); //이 프로미스를 반환해야 한다.
+
+            CustomerMiddleware.getCustomers(req, res, next); // 미들웨어 실행
+            sinon.assert.callCount(fetchCustomers, 1); //콜 카운트
+
+            return fetchCustomersPromise.then(function(){
+                expect(req.response).to.be.a('array'); //응답은 배열로, 길이도 같고, 내용이 같아야 함.
+                expect(req.response.length).to.equal(expectedCustomers.length);
+                expect(req.response).to.deep.equal(expectedCustomers);
+                sinon.assert.callCount(next,1); // next call count도 확인.
+            })
+        });
+
+        it('should throw error while getting all customers', function(){
+            expectedError = ErrorFixture.unknownError;
+
+            fetchCustomersPromise = Promise.reject(expectedError);
+            fetchCustomers.returns(fetchCustomersPromise);
+
+            CustomerMiddleware.getCustomers(req,res, next);
+            sinon.assert.callCount(fetchCustomers, 1);
+            return fetchCustomersPromise.catch(function (error){
+                expect(error).to.be.a('object');
+                expect(error).to.deep.equal(expectedError);
+            });
+        })
+    });
 })
