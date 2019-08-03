@@ -97,4 +97,41 @@ describe('CustomerService',function(){
             });
         });
     });
+
+    // fetch a customer
+    describe('fetch a Customer by Id', function(){
+        var expectedFetchedCustomer, customerId, expectedError;
+        it('should successfully fetch the customer by id', function(){
+            expectedFetchedCustomer = CustomerFixture.createdCustomer;
+            customerId = expectedFetchedCustomer._id;
+
+            // model에서 해당 함수 실행시 예상 값을 받아와야 함.
+            CustomerModelMock.expects('findById')
+            .withArgs(customerId)
+            .chain('exec')
+            .resolves(expectedFetchedCustomer);
+            
+            return CustomerService.fetchCustomerById(customerId)
+            .then(function(data){
+                CustomerModelMock.verify(); //verify that it works as expected.
+                expect(data).to.deep.equal(expectedFetchedCustomer);
+            });
+        });
+
+        it('should throw error while fetching all customers', function(){
+            customerId = CustomerFixture.createdCustomer._id;
+            expectedError = ErrorFixture.unknownError;
+
+            CustomerModelMock.expects('findById')
+            .withArgs(customerId)
+            .chain('exec')
+            .rejects(expectedError);
+
+            return CustomerService.fetchCustomerById(customerId)
+            .catch(function(error){
+                CustomerModelMock.verify();
+                expect(error).to.deep.equal(expectedError);
+            });
+        })
+    })
 });

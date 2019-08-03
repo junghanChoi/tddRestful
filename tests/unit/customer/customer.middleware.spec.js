@@ -112,4 +112,43 @@ describe('CustomerMiddleware', function(){
             });
         })
     });
+
+    describe('getCustomerById', function(){
+        var fetchCustomerById, fetchCustomerByIdPromise, expectedCustomer, expectedError;
+        beforeEach(function(){
+            fetchCustomerById = sinon.stub(CustomerService, 'fetchCustomerById');
+        });
+        afterEach(function(){
+            fetchCustomerById.restore();
+        });
+        it('should successfully fetch the customer by id', function(){
+            expectedCustomer = CustomerFixture.createdCustomer;
+            fetchCustomerByIdPromise = Promise.resolve(expectedCustomer);
+            //아래 문장까지가 설정. 스텁이 파라미터를 갖고, 아래 프로미스를 반환해야 한다.
+            fetchCustomerById.withArgs(req.params.CustomerId).returns(fetchCustomerByIdPromise);
+            // 실제 호출
+            CustomerMiddleware.getCustomerById(req, res, next);
+            sinon.assert.callCount(fetchCustomerById, 1);
+
+            return fetchCustomerByIdPromise.then(function(){
+                expect(req.response).to.be.a('object');
+                expect(req.response).to.deep.equal(expectedCustomer);
+                sinon.assert.callCount(next, 1);
+            });
+        });
+        it('should throw error while getting customer by id', function(){
+            expectedError = ErrorFixture.unknownError;
+            fetchCustomerByIdPromise = Promise.reject(expectedError);
+
+            fetchCustomerById.withArgs(req.params.CustomerId).returns(fetchCustomerByIdPromise);
+
+            CustomerMiddleware.getCustomerById(req, res, next);
+
+            sinon.assert.callCount(fetchCustomerById, 1);
+            return fetchCustomerByIdPromise.catch(function(error){
+                expect(error).to.be.a('object');
+                expect(error).to.deep.equal(expectedError);
+            });
+        });
+    })
 })
