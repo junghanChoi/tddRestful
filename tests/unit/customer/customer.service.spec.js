@@ -167,5 +167,39 @@ describe('CustomerService',function(){
                 expect(error).to.deep.equal(expectedError);
             });
         });
-    })
+    });
+
+    describe('deleteCustomer', function(){
+        var existingCustomer, expectedError;
+        it('should successfully remove customer', function(){
+            existingCustomer = CustomerFixture.createdCustomer;
+
+            CustomerModelMock.expects('findByIdAndRemove')
+            .withArgs(existingCustomer._id)
+            .chain('exec')
+            .resolves(existingCustomer);
+
+            return CustomerService.deleteCustomer(existingCustomer._id)
+            .then(function(data){
+                CustomerModelMock.verify();
+                expect(data).to.deep.equal(existingCustomer);
+            });
+        });
+        
+        it('should throw error while removing customer', function(){
+            expectedError = ErrorFixture.unknownError;
+            existingCustomer = CustomerFixture.createdCustomer;
+
+            CustomerModelMock.expects('findByIdAndRemove')
+            .withArgs(existingCustomer._id)
+            .chain('exec')
+            .rejects(expectedError);
+
+            return CustomerService.deleteCustomer(existingCustomer._id)
+            .catch(function(error){
+                CustomerModelMock.verify();
+                expect(error).to.deep.equal(expectedError);
+            });
+        });
+    });
 });

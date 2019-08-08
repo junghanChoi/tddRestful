@@ -5,7 +5,8 @@
         createCustomer: createCustomer,
         fetchCustomers: fetchCustomers,
         fetchCustomerById : fetchCustomerById,
-        updateCustomer : updateCustomer
+        updateCustomer : updateCustomer,
+        deleteCustomer: deleteCustomer
     };
 
     var CustomerModel = require('./customer.module')().CustomerModel;
@@ -23,6 +24,10 @@
 
     function updateCustomer(customerId, customer){
         return CustomerModel.findByIdAndUpdate(customerId, customer, {new: true}).exec();
+    }
+
+    function deleteCustomer(customerId){
+        return CustomerModel.findByIdAndRemove(customerId).exec();
     }
 
 })();
