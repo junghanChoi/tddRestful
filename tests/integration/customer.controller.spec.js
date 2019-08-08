@@ -16,7 +16,8 @@ var CustomerFixture = Fixtures.CustomerFixture;
 var baseUri = '/customers';
 
 var testData = {
-    existingCustomer: {}
+    existingCustomer: {},
+    modifiedCustomer: CustomerFixture.modifiedCustomer
 }
 
 describe('CustomerController', function(){
@@ -66,6 +67,24 @@ describe('CustomerController', function(){
 
                 done();
             });
+        });
+    });
+
+    describe('PUT' + baseUri + '/:customerId', function(){
+        it('should modify existing customer', function(done){
+            testData.modifiedCustomer._id = testData.existingCustomer._id;
+
+            request(app)
+            .put(baseUri + '/' + testData.modifiedCustomer._id)
+            .send(testData.modifiedCustomer)
+            .end(function(err, res){
+                expect(res.status).to.equal(200);
+                expect(res.body).to.not.equal(undefined);
+                expect(res.body.firstName).to.equal(testData.modifiedCustomer.firstName);
+                expect(res.body.address).to.equal(testData.modifiedCustomer.address);
+
+                done();
+            })
         });
     })
 })

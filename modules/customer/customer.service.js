@@ -4,7 +4,8 @@
     module.exports = {
         createCustomer: createCustomer,
         fetchCustomers: fetchCustomers,
-        fetchCustomerById : fetchCustomerById
+        fetchCustomerById : fetchCustomerById,
+        updateCustomer : updateCustomer
     };
 
     var CustomerModel = require('./customer.module')().CustomerModel;
@@ -18,6 +19,10 @@
     // mongoosejs.com/doc/api.html#model_Model.findById
     function fetchCustomerById(customerId){
         return CustomerModel.findById(customerId).exec();
+    }
+
+    function updateCustomer(customerId, customer){
+        return CustomerModel.findByIdAndUpdate(customerId, customer, {new: true}).exec();
     }
 
 })();

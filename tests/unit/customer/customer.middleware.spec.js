@@ -150,5 +150,45 @@ describe('CustomerMiddleware', function(){
                 expect(error).to.deep.equal(expectedError);
             });
         });
+    });
+
+    describe('modifyCustomer', function(){
+        var updateCustomer, updateCustomerPromise, expectedModifiedCustomer, expectedError;
+
+        beforeEach(()=>{
+            updateCustomer = sinon.stub(CustomerService, 'updateCustomer');
+            req.body = CustomerFixture.modifiedCustomer;
+            req.params.CustomerId = req.body._id;
+        });
+        afterEach(()=>{
+            updateCustomer.restore();
+        });
+
+        it('should successfully modify the customer details', function(){
+            expectedModifiedCustomer = CustomerFixture.modifiedCustomer;
+            updateCustomerPromise = Promise.resolve(expectedModifiedCustomer); //이걸 반환하는 프로미스임을 확인
+            updateCustomer.withArgs(req.params.customerId, req.body).returns(updateCustomerPromise);
+
+            CustomerMiddleware.modifyCustomer(req,res,next);
+            sinon.assert.callCount(updateCustomer, 1); //middleware modifyCustomer가 service호출 확인
+            return updateCustomerPromise.then(function(){
+                expect(req.response).to.be.a('object'); //req.response 객체가 있는지 확인!
+                expect(req.response).to.deep.equal(expectedModifiedCustomer);
+                sinon.assert.callCount(next, 1);
+            });
+        });
+        it('should throw error while modifying customer by id', function(){
+            expectedError = ErrorFixture.unknownError;
+            updateCustomerPromise = Promise.reject(expectedError);
+            updateCustomer.withArgs(req.params.customerId, req.body).returns(updateCustomerPromise);
+
+            CustomerMiddleware.modifyCustomer(req,res, next);
+            sinon.assert.callCount(updateCustomer, 1);
+            return updateCustomerPromise.catch(function(error){
+                expect(error).to.be.a('object');
+                expect(error).to.deep.equal(expectedError);
+            });
+        });
+
     })
 })
