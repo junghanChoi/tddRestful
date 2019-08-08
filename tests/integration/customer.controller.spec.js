@@ -88,16 +88,18 @@ describe('CustomerController', function(){
         });
     });
     describe('DELETE' + baseUri + '/:customerId', function(){
-        it('should remove an existing customer', function(done){
-            request(app)
+        it('should remove an existing customer', async function(){
+            const res = await request(app)
             .delete(baseUri + '/' + testData.existingCustomer._id)
-            .end(function(err, res){
-                expect(res.status).to.equal(200);
-                expect(res.body.firstName).to.not.equal(undefined);
-                expect(res.body.firstName).to.equal(testData.existingCustomer.firstName);
+            //.end(function(err, res){
+            //    expect(res.status).to.equal(200);
+            //    expect(res.body.firstName).to.not.equal(undefined);
+            //    expect(res.body.firstName).to.equal(testData.existingCustomer.firstName);
+            expect(res.status).to.equal(200);
+            expect(res.body.firstName).to.not.equal(undefined);
+            expect(res.body.firstName).to.equal(testData.existingCustomer.firstName);
 
-                done();
-            });
-        })
+
+        });
     })
-})
+});
