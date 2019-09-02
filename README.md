@@ -1,6 +1,6 @@
 # tddRestful
 
-I'm reading 'Building Node.js REST API with TDD Approach' book from kindle.
+I've read 'Building Node.js REST API with TDD Approach' book from kindle.
 This repository is folloiwng practice.
 
 테스트엔지니어로서 API테스트를 하다보니, API개발 자체에 대해 더 알고 싶어서 공부하게 됐습니다.
